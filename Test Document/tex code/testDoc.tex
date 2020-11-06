@@ -46,9 +46,6 @@
                 \SI{54.7}{\degree} to the surface of the wafer, and thus, we can calculate the size
                 of dimension $a$ using Equation \ref{eqt:dimACalc}.
                 \insertEqt{dimACalc}
-                Starting from a $w$ of \SI{500}{\micro\meter} and going to a depth of 
-                \SI{290}{\micro\meter} the resultant plate will be 
-                \siluVal[1e-6]{etchDimA(500e-6, 290e-6)}{\micro\meter} wide.
 
             \subsection{Acceptable Variation in Thickness}
                 If a \SI{5}{\percent} variation in applied pressure is the acceptable range for the
@@ -58,12 +55,6 @@
                 \insertEqt{presStressCor} 
                 This ratio of strains can then be simplified to find instead a ratio of 
                 thicknesses as shown in \ref{eqt:strainRatio}.
-                \insertEqt{strainRatio}
-                This process can be repeated for a negative \SI{5}{\percent} variation in strain
-                resulting in an acceptable variation range of thickness of  
-                \siluVal{math.abs(math.sqrt(0.95)-1)*100}{\percent} and 
-                \siluVal{-math.abs(math.sqrt(1.05)-1)*100}{\percent} from the
-                nominal value.
 
         \section{Q2: Surface Micromachining}
             \subsection{Comparing Stresses}

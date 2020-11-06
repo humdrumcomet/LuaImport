@@ -4,11 +4,6 @@
 \newEqt{presStressCor}{
     \sigma = 0.3P\left(\frac{a}{h}\right)^{2}
 }
-\newEqt[align]{strainRatio}{
-    \frac{\sigma_{1}}{\sigma_{2}} &= 1.05 = \left(\frac{h_{2}}{h_{1}}\right)^2 \nonumber\\
-    \sqrt{1.05} &= \frac{h_{2}}{h_{1}} \nonumber\\
-    \directlua{printNum(math.sqrt(1.05))} &= \frac{h_{2}}{h_{1}}
-}
 \newEqt[align]{stressComp}{
     \left(\frac{a_1}{h_1}\right)^2 &= \left(\frac{a_2}{h_2}\right)^2 \nonumber\\
     \frac{a_1}{h_1} &= \frac{a_2}{h_2} \nonumber\\
