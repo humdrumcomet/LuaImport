@@ -1,0 +1,115 @@
+% arara: lualatex
+% arara: makeglossaries
+% arara: lualatex
+% arara: lualatex
+
+\providecommand{\sharedPath}{../../Shared}
+\providecommand{\importPath}{\sharedPath/Imports}
+\providecommand{\assetPath}{\sharedPath/Assets}
+\providecommand{\codePath}{\sharedPath/Assets/LuaCode}
+
+\documentclass[hidelinks, 12pt]{article}%
+
+\input{\importPath/preambleGen}
+\input{\importPath/glossary}
+\input{\importPath/symbols}
+\input{\importPath/assets}
+\input{\importPath/equations}
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+\begin{document}
+    \frontmatter
+        \begin{center}
+            \vspace*{1cm}
+            \section*{\Huge LuaImport}%\addcontentsline{toc}{section}{Title Page}
+            \vspace{6cm}
+            \begin{centering}
+                \Large{A Package by: Aaron English\\
+                Date: \today}
+            \end{centering}
+        \end{center}
+        \thispagestyle{empty}
+
+    \clearpage
+    \mainmatter
+        \section{Q1: Bulk Micromachining}
+            \subsection{Fabrication Process}
+                Figure \ref{fig:bulkMicroMachine} shows a fabrication process for a piezoresistive
+                pressure sensor.
+                \insertFig{bulkMicroMachine}
+                \insertFig{pierceAngle}
+                The steps are described as follows:
+
+            \subsection{Plate Dimensions}
+                Given the (100) orientation, we know that the etch will leave a surface at 
+                \SI{54.7}{\degree} to the surface of the wafer, and thus, we can calculate the size
+                of dimension $a$ using Equation \ref{eqt:dimACalc}.
+                \insertEqt{dimACalc}
+                Starting from a $w$ of \SI{500}{\micro\meter} and going to a depth of 
+                \SI{290}{\micro\meter} the resultant plate will be 
+                \siluVal[1e-6]{etchDimA(500e-6, 290e-6)}{\micro\meter} wide.
+
+            \subsection{Acceptable Variation in Thickness}
+                If a \SI{5}{\percent} variation in applied pressure is the acceptable range for the
+                sensor, then by examining the simplified equation for pressure-to-strain (Equation 
+                \ref{eqt:presStressCor}), and assuming all other factors remain constant a five percent
+                variation can then be translated into a ratio of two strains.
+                \insertEqt{presStressCor} 
+                This ratio of strains can then be simplified to find instead a ratio of 
+                thicknesses as shown in \ref{eqt:strainRatio}.
+                \insertEqt{strainRatio}
+                This process can be repeated for a negative \SI{5}{\percent} variation in strain
+                resulting in an acceptable variation range of thickness of  
+                \siluVal{math.abs(math.sqrt(0.95)-1)*100}{\percent} and 
+                \siluVal{-math.abs(math.sqrt(1.05)-1)*100}{\percent} from the
+                nominal value.
+
+        \section{Q2: Surface Micromachining}
+            \subsection{Comparing Stresses}
+                If the stress per unit of pressure is expected to be the same, the required 
+                ratio of the dimension $a$ can be found as shown in \ref{eqt:stressComp}.
+                \insertEqt{stressComp}
+
+        \section{Q3: Etch Profiles}
+            The expected cavities from the etch are shown from a top down view in the second 
+            column of Figure \ref{fig:etchProfile}, and the side view from the third column.
+            \insertFig{etchProfile}
+            A brief explanation for each is given as follows:
+
+        \section{Q4: Microcantilevers}
+            \gls{cwvm}
+
+            \gls{EB}
+
+            \gls{pr}
+
+            \gls{c}
+
+            \gls{hvps}
+
+            \gls{hva}
+
+            \gls{postgres}
+
+            \gls{cnc}
+
+            \clearpage
+
+            \gls{cwvm}
+
+            \gls{c}
+
+            \gls{hvps}
+
+            \gls{hva}
+
+            \gls{postgres}
+
+            \gls{cnc}
+
+        \clearpage
+        \printglossary[type=symbols]
+        \printglossary[type=\acronymtype]
+        \printglossary[type=main]
+\end{document}
