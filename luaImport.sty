@@ -1,7 +1,12 @@
+\ProvidesPackage{luaImport}
+%Unsure about which packages to require, maybe none?
+%\RequirePackage[mode=tex, subpreambles=false]{standalone}
+%\RequirePackage[debug, toc, section=section, acronym, symbols]{glossaries} % Glossaries package
+\RequirePackage{luacode}
 % Create Functions for simplifying glossary, equation, and asset creation
 \directlua{
-    path= "\importPath"
-    import = require(path.."/luaImport")
+    path= "\packagePath"
+    import = require(path.."/luaImport/luaImport")
 }
 \newcommand\newGl[3][gls]{
     \directlua{newGl([[#1]], [[#2]], \unexpanded{[[#3]]})}
