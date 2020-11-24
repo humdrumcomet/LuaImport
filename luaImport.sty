@@ -6,13 +6,20 @@
 % Create Functions for simplifying glossary, equation, and asset creation
 \directlua{
     path= "\packagePath"
-    import = require(path.."/luaImport/luaImport")
+    
+    import = require (path.."/luaImport/luaImport")
 }
 \newcommand\newGl[3][gls]{
     \directlua{newGl([[#1]], [[#2]], \unexpanded{[[#3]]})}
 }
+\newcommand\newGlFromTable[3][gls]{
+    \directlua{newGlFromTable([[#1]], [[#2]], \unexpanded{[[#3]]})}
+}
 \newcommand\newEqt[3][equation]{
     \directlua{newEqt([[#1]], [[#2]], \unexpanded{[[#3]]})}
+}
+\newcommand\newEqtFromTable[3][equation]{
+    \directlua{newEqtFromTable([[#1]], [[#2]], \unexpanded{[[#3]]})}
 }
 \newcommand\newFig[3][reg]{
     \directlua{newFig([[#1]], [[#2]], \unexpanded{[[#3]]})}

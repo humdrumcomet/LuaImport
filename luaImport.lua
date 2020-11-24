@@ -38,6 +38,16 @@ function newEqt(kind, eqtName, eq)
     --print(eqtName, kind, eq)
 end
 
+function newEqtFromTable(eqTable)
+    print(eqTable)
+    for key, value in pairs(eqTable) do
+        print(key)
+        print(value.eqtType)
+        print(value.texExp)
+        newEqt(value.eqtType, key, value.texExp)
+    end
+end
+
 function newGl(kind, name, inputStr)
     --Order is:
     --callName
@@ -53,26 +63,30 @@ function newGl(kind, name, inputStr)
         acr = [[type=\acronymtype, ]],
         gls = ''
     }
-    local inputs = {kind = kind, name = name}
-    trimmed = string.gsub(inputStr, '^%s*(.-)%s*$', '%1')
-    modStr = trimmed..[[,]]
-    for key, value in string.gmatch(modStr, '(%w-)%s*=%s*(%b{}),') do
-        inputs[key] = string.gsub(value, '^{(.-)}$', '%1')
-    end
     local acrG = ''
     local acrPl = ''
     local glsAdd = ''
-    if inputs.descriptionExt then
-        acrG = [[see=[Glossary:]{]]..inputs.name..[[g}} \newglossaryentry{]]..
-                inputs.name..[[g}{name={\glsentrytext{]]..
-                inputs.name..[[}}, description={]]..inputs.descriptionExt..[[}]]
+    if type(inputStr)=='string' then
+        inputs = {kind = kind, name = name}
+        trimmed = string.gsub(inputStr, '^%s*(.-)%s*$', '%1')
+        modStr = trimmed..[[,]]
+        for key, value in string.gmatch(modStr, '(%w-)%s*=%s*(%b{}),') do
+            inputs[key] = string.gsub(value, '^{(.-)}$', '%1')
+        end
+        if inputs.descriptionExt then
+            acrG = [[see=[Glossary:]{]]..inputs.name..[[g}} \newglossaryentry{]]..
+                    inputs.name..[[g}{name={\glsentrytext{]]..
+                    inputs.name..[[}}, description={]]..inputs.descriptionExt..[[}]]
 
-        glsAdd = [[\glsadd{]]..inputs.name..[[g}]]
-    end
-    if inputs.displayPl then
-        acrPl = [[plural={]]..inputs.displayPl..[[}, descriptionplural={]]..
-                inputs.descriptionPl..[[}, firstplural={\glsentrydescplural{]]..
-                inputs.name..[[} (\glsentryplural{]]..inputs.name..[[})]]..glsAdd..[[},]]
+            glsAdd = [[\glsadd{]]..inputs.name..[[g}]]
+        end
+        if inputs.displayPl then
+            acrPl = [[plural={]]..inputs.displayPl..[[}, descriptionplural={]]..
+                    inputs.descriptionPl..[[}, firstplural={\glsentrydescplural{]]..
+                    inputs.name..[[} (\glsentryplural{]]..inputs.name..[[})]]..glsAdd..[[},]]
+        end
+    else
+        inputs = inputStr
     end
 
     callBuild = {
@@ -88,10 +102,32 @@ function newGl(kind, name, inputStr)
                 inputs.name..[[} (\glsentrytext{]]..inputs.name..[[})]]..glsAdd..[[}, ]]..
                 acrPl..acrG..[[}]] end,
     }
-    texString = callBuild[inputs['kind']](inputs)
+    print(inputs.kind)
+    texString = callBuild[inputs.kind](inputs)
     print(texString)
     tex.sprint(texString..' ')
 
+end
+
+function newGlFromTable(glTable)
+    for key, value in pairs(glTable) do
+        print(key)
+        local inputsTbl = {
+            name = key,
+            display = value.display,
+            description = value.description,
+            kind = value.glsType or 'sym',
+            ensureMath = value.ensureMath
+        }
+        if inputsTbl.ensureMath then
+            inputsTbl.display = [[\ensuremath{]]..inputsTbl.display..[[}]]
+        end
+        print(inputsTbl.name)
+        print(inputsTbl.display)
+        print(inputsTbl.description)
+        print(inputsTbl.kind)
+        newGl(inputsTbl.kind, key, inputsTbl)
+    end
 end
 
 function insertFigFromTable(figName)
