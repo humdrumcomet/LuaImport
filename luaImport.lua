@@ -28,14 +28,15 @@ function newFig(kind, figName, props)
     end
 end
 
-function newEqt(kind, eqtName, eq, eqtExt)
+function newEqt(kind, eqtName, initEqt, interEqt, finEqt)
     kind = kind or 'equation'
     eqtExt = eqtExt or ''
     print(kind)
     eqtTable[eqtName] = {
         kind = kind,
-        eqt = eq,
-        eqtExt = eqtExt
+        initEqt = initEqt,
+        interEqt = interEqt,
+        finEqt = finEqt
     }
     --print(eqtName, kind, eq)
 end
@@ -45,8 +46,8 @@ function newEqtFromTable(eqTable)
     for key, value in pairs(eqTable) do
         print(key)
         print(value.eqtType)
-        print(value.texExp)
-        newEqt(value.eqtType, key, value.tex, value.texExp)
+        --print(value.texExp)
+        newEqt(value.eqtType, key, value.initTex, value.interTex, value.finTex)
     end
 end
 
@@ -128,7 +129,9 @@ function newGlFromTable(glTable)
         --print(inputsTbl.display)
         --print(inputsTbl.description)
         --print(inputsTbl.kind)
-        newGl(inputsTbl.kind, key, inputsTbl)
+        if not inputsTbl.kind == 'none' then
+            newGl(inputsTbl.kind, key, inputsTbl)
+        end
     end
 end
 
@@ -149,7 +152,7 @@ function insertEqtFromTable(eqtName, opts)
     surroundKind = optsTable['surround'] or 'full'
     --eqKind = eqtTable[eqtName]['kind'] or 'equation'
     eqKind = optsTable['kind'] or 'equation'
-    if vers == 'showExp' then
+    if vers == 'showExp' or vers == 'showExpFull' then
         eqKind = 'align'
     end
     print(eqKind)
@@ -168,11 +171,17 @@ function insertEqtFromTable(eqtName, opts)
 
     }
     equation = {
-        simp = eqtTable[eqtName]['eqt'],
-        exp = eqtTable[eqtName]['eqtExt'],
-        showExp = string.gsub(eqtTable[eqtName]['eqt'], ' = ', ' &= ')..' '..
+        init = eqtTable[eqtName]['initEqt'],
+        inter = eqtTable[eqtName]['interEqt'],
+        fin = eqtTable[eqtName]['finEqt'],
+        showExp = string.gsub(eqtTable[eqtName]['initEqt'], ' = ', ' &= ')..' '..
                 append['nonum']..append['newLine'] ..' '..
-                string.gsub(eqtTable[eqtName]['eqtExt'], ' = ', ' &= ')
+                string.gsub(eqtTable[eqtName]['finEqt'], ' = ', ' &= '),
+        showExpFull = string.gsub(eqtTable[eqtName]['initEqt'], ' = ', ' &= ')..' '..
+                append['nonum']..append['newLine'] ..' '..
+                string.gsub(eqtTable[eqtName]['interEqt'], ' = ', ' &= ')..' '..
+                append['nonum']..append['newLine'] ..' '..
+                string.gsub(eqtTable[eqtName]['finEqt'], ' = ', ' &= ')
     }
     print(surroundBegin[surroundKind])
     print(equation[vers])
