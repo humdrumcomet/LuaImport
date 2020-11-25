@@ -3,6 +3,7 @@
 %\RequirePackage[mode=tex, subpreambles=false]{standalone}
 %\RequirePackage[debug, toc, section=section, acronym, symbols]{glossaries} % Glossaries package
 \RequirePackage{luacode}
+\RequirePackage{\packagePath/luaHelper/luaHelper}
 % Create Functions for simplifying glossary, equation, and asset creation
 \directlua{
     path= "\packagePath"
@@ -24,8 +25,8 @@
 \newcommand\newFig[3][reg]{
     \directlua{newFig([[#1]], [[#2]], \unexpanded{[[#3]]})}
 }
-\newcommand\insertEqt[1]{
-    \directlua{insertEqtFromTable([[#1]])}
+\newcommand\insertEqt[2][empty]{
+    \directlua{insertEqtFromTable([[#2]], [[#1]])}
 }
 \newcommand\insertFig[1]{
     \directlua{insertFigFromTable([[#1]])}

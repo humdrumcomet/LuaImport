@@ -28,12 +28,14 @@ function newFig(kind, figName, props)
     end
 end
 
-function newEqt(kind, eqtName, eq)
+function newEqt(kind, eqtName, eq, eqtExt)
     kind = kind or 'equation'
+    eqtExt = eqtExt or ''
     print(kind)
     eqtTable[eqtName] = {
         kind = kind,
-        eqt = eq
+        eqt = eq,
+        eqtExt = eqtExt
     }
     --print(eqtName, kind, eq)
 end
@@ -44,7 +46,7 @@ function newEqtFromTable(eqTable)
         print(key)
         print(value.eqtType)
         print(value.texExp)
-        newEqt(value.eqtType, key, value.texExp)
+        newEqt(value.eqtType, key, value.tex, value.texExp)
     end
 end
 
@@ -111,7 +113,7 @@ end
 
 function newGlFromTable(glTable)
     for key, value in pairs(glTable) do
-        print(key)
+        --print(key)
         local inputsTbl = {
             name = key,
             display = value.display,
@@ -122,10 +124,10 @@ function newGlFromTable(glTable)
         if inputsTbl.ensureMath then
             inputsTbl.display = [[\ensuremath{]]..inputsTbl.display..[[}]]
         end
-        print(inputsTbl.name)
-        print(inputsTbl.display)
-        print(inputsTbl.description)
-        print(inputsTbl.kind)
+        --print(inputsTbl.name)
+        --print(inputsTbl.display)
+        --print(inputsTbl.description)
+        --print(inputsTbl.kind)
         newGl(inputsTbl.kind, key, inputsTbl)
     end
 end
@@ -140,10 +142,42 @@ function insertFigFromTable(figName)
     tex.sprint(figStr)
 end
 
-function insertEqtFromTable(eqtName)
-    eqStr = [[\begin{]]..(eqtTable[eqtName]['kind'] or 'equation')..[[}]]..
-            eqtTable[eqtName]['eqt']..[[\label{eqt:]]..eqtName..[[}\end{]]..
-            (eqtTable[eqtName]['kind'] or 'equation')..[[}]]
-    --print(eqStr)
+function insertEqtFromTable(eqtName, opts)
+    optsTable = optsToTable(opts)
+    vers = optsTable['vers'] or 'exp'
+    numPrint = optsTable['numPrint'] or 'nochg'
+    surroundKind = optsTable['surround'] or 'full'
+    --eqKind = eqtTable[eqtName]['kind'] or 'equation'
+    eqKind = optsTable['kind'] or 'equation'
+    if vers == 'showExp' then
+        eqKind = 'align'
+    end
+    print(eqKind)
+    append = {
+        nochg = '',
+        nonum = [[\nonumber]],
+        newLine = [[\\]]
+    }
+    surroundBegin = {
+        full = [[\begin{]]..eqKind..[[}]],
+        inline = [[$]]
+    }
+    surroundEnd = {
+        full = [[\label{eqt:]]..eqtName..[[}\end{]]..eqKind..[[}]],
+        inline = [[$]]
+
+    }
+    equation = {
+        simp = eqtTable[eqtName]['eqt'],
+        exp = eqtTable[eqtName]['eqtExt'],
+        showExp = string.gsub(eqtTable[eqtName]['eqt'], ' = ', ' &= ')..' '..
+                append['nonum']..append['newLine'] ..' '..
+                string.gsub(eqtTable[eqtName]['eqtExt'], ' = ', ' &= ')
+    }
+    print(surroundBegin[surroundKind])
+    print(equation[vers])
+    print(append[numPrint])
+    print(surroundEnd[surroundKind])
+    eqStr = surroundBegin[surroundKind]..equation[vers]..append[numPrint]..surroundEnd[surroundKind]
     tex.sprint(eqStr)
 end
