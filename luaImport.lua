@@ -28,26 +28,23 @@ function newFig(kind, figName, props)
     end
 end
 
-function newEqt(kind, eqtName, initEqt, interEqt, finEqt)
+function newEqt(kind, eqtName, finEqt, initEqt, interEqt)
     kind = kind or 'equation'
     eqtExt = eqtExt or ''
-    print(kind)
     eqtTable[eqtName] = {
         kind = kind,
-        initEqt = initEqt,
-        interEqt = interEqt,
+        initEqt = initEqt or '',
+        interEqt = interEqt or '',
         finEqt = finEqt
     }
     --print(eqtName, kind, eq)
 end
 
 function newEqtFromTable(eqTable)
-    print(eqTable)
+    --print(eqTable)
     for key, value in pairs(eqTable) do
-        print(key)
-        print(value.eqtType)
         --print(value.texExp)
-        newEqt(value.eqtType, key, value.initTex, value.interTex, value.finTex)
+        newEqt(value.eqtType, key, value.finTex, value.initTex, value.interTex)
     end
 end
 
@@ -105,16 +102,13 @@ function newGl(kind, name, inputStr)
                 inputs.name..[[} (\glsentrytext{]]..inputs.name..[[})]]..glsAdd..[[}, ]]..
                 acrPl..acrG..[[}]] end,
     }
-    print(inputs.kind)
     texString = callBuild[inputs.kind](inputs)
-    print(texString)
     tex.sprint(texString..' ')
 
 end
 
 function newGlFromTable(glTable)
     for key, value in pairs(glTable) do
-        --print(key)
         local inputsTbl = {
             name = key,
             display = value.display,
@@ -125,11 +119,7 @@ function newGlFromTable(glTable)
         if inputsTbl.ensureMath then
             inputsTbl.display = [[\ensuremath{]]..inputsTbl.display..[[}]]
         end
-        --print(inputsTbl.name)
-        --print(inputsTbl.display)
-        --print(inputsTbl.description)
-        --print(inputsTbl.kind)
-        if not inputsTbl.kind == 'none' then
+        if not (inputsTbl.kind == 'none') then
             newGl(inputsTbl.kind, key, inputsTbl)
         end
     end
@@ -147,7 +137,7 @@ end
 
 function insertEqtFromTable(eqtName, opts)
     optsTable = optsToTable(opts)
-    vers = optsTable['vers'] or 'exp'
+    vers = optsTable['vers'] or 'fin'
     numPrint = optsTable['numPrint'] or 'nochg'
     surroundKind = optsTable['surround'] or 'full'
     --eqKind = eqtTable[eqtName]['kind'] or 'equation'
@@ -155,7 +145,7 @@ function insertEqtFromTable(eqtName, opts)
     if vers == 'showExp' or vers == 'showExpFull' then
         eqKind = 'align'
     end
-    print(eqKind)
+    --print(eqKind)
     append = {
         nochg = '',
         nonum = [[\nonumber]],
@@ -170,6 +160,11 @@ function insertEqtFromTable(eqtName, opts)
         inline = [[$]]
 
     }
+    --print('------')
+    --print(eqtTable[eqtName]['initEqt'])
+    --print(eqtTable[eqtName]['interEqt'])
+    --print(eqtTable[eqtName]['finEqt'])
+    --print('------')
     equation = {
         init = eqtTable[eqtName]['initEqt'],
         inter = eqtTable[eqtName]['interEqt'],
@@ -183,10 +178,13 @@ function insertEqtFromTable(eqtName, opts)
                 append['nonum']..append['newLine'] ..' '..
                 string.gsub(eqtTable[eqtName]['finEqt'], ' = ', ' &= ')
     }
-    print(surroundBegin[surroundKind])
+    --print(surroundBegin[surroundKind])
+
+    print('--------------------------')
     print(equation[vers])
-    print(append[numPrint])
-    print(surroundEnd[surroundKind])
+    print('--------------------------')
+    --print(append[numPrint])
+    --print(surroundEnd[surroundKind])
     eqStr = surroundBegin[surroundKind]..equation[vers]..append[numPrint]..surroundEnd[surroundKind]
     tex.sprint(eqStr)
 end
