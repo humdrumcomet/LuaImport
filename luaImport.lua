@@ -180,9 +180,9 @@ function insertEqtFromTable(eqtName, opts)
     }
     --print(surroundBegin[surroundKind])
 
-    print('--------------------------')
-    print(equation[vers])
-    print('--------------------------')
+    --print('--------------------------')
+    --print(equation[vers])
+    --print('--------------------------')
     --print(append[numPrint])
     --print(surroundEnd[surroundKind])
     eqStr = surroundBegin[surroundKind]..equation[vers]..append[numPrint]..surroundEnd[surroundKind]
