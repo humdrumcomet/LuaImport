@@ -119,7 +119,7 @@ function newGlFromTable(glTable)
         if inputsTbl.ensureMath then
             inputsTbl.display = [[\ensuremath{]]..inputsTbl.display..[[}]]
         end
-        if not (inputsTbl.kind == 'none') then
+        if inputsTbl.description then
             newGl(inputsTbl.kind, key, inputsTbl)
         end
     end
