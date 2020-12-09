@@ -40,14 +40,6 @@ function newEqt(kind, eqtName, finEqt, initEqt, interEqt)
     --print(eqtName, kind, eq)
 end
 
-function newEqtFromTable(eqTable)
-    --print(eqTable)
-    for key, value in pairs(eqTable) do
-        --print(value.texExp)
-        newEqt(value.eqtType, key, value.finTex, value.initTex, value.interTex)
-    end
-end
-
 function newGl(kind, name, inputStr)
     --Order is:
     --callName
@@ -107,24 +99,6 @@ function newGl(kind, name, inputStr)
 
 end
 
-function newGlFromTable(glTable)
-    for key, value in pairs(glTable) do
-        local inputsTbl = {
-            name = key,
-            display = value.display,
-            description = value.description,
-            kind = value.glsType or 'sym',
-            ensureMath = value.ensureMath
-        }
-        if inputsTbl.ensureMath then
-            inputsTbl.display = [[\ensuremath{]]..inputsTbl.display..[[}]]
-        end
-        if inputsTbl.description then
-            newGl(inputsTbl.kind, key, inputsTbl)
-        end
-    end
-end
-
 function insertFigFromTable(figName)
     figStr = [[\begin{figure}[]]..figTable[figName]['positioning']..']'..
                 figTable[figName]['centeringOpen']..figTable[figName]['kind']..
@@ -160,11 +134,6 @@ function insertEqtFromTable(eqtName, opts)
         inline = [[$]]
 
     }
-    --print('------')
-    --print(eqtTable[eqtName]['initEqt'])
-    --print(eqtTable[eqtName]['interEqt'])
-    --print(eqtTable[eqtName]['finEqt'])
-    --print('------')
     equation = {
         init = eqtTable[eqtName]['initEqt'],
         inter = eqtTable[eqtName]['interEqt'],
@@ -178,13 +147,6 @@ function insertEqtFromTable(eqtName, opts)
                 append['nonum']..append['newLine'] ..' '..
                 string.gsub(eqtTable[eqtName]['finEqt'], ' = ', ' &= ')
     }
-    --print(surroundBegin[surroundKind])
-
-    --print('--------------------------')
-    --print(equation[vers])
-    --print('--------------------------')
-    --print(append[numPrint])
-    --print(surroundEnd[surroundKind])
     eqStr = surroundBegin[surroundKind]..equation[vers]..append[numPrint]..surroundEnd[surroundKind]
     tex.sprint(eqStr)
 end
