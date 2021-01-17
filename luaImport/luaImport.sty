@@ -1,14 +1,12 @@
 \ProvidesPackage{luaImport}
-%Unsure about which packages to require, maybe none?
-%\RequirePackage[mode=tex, subpreambles=false]{standalone}
-%\RequirePackage[debug, toc, section=section, acronym, symbols]{glossaries} % Glossaries package
 \RequirePackage{luacode}
-\RequirePackage{\packagePath/luaHelper/luaHelper}
+\RequirePackage{luaHelper}
+
 % Create Functions for simplifying glossary, equation, and asset creation
 \directlua{
-    path= "\packagePath"
-    
-    import = require (path.."/luaImport/luaImport")
+    local sourcefile = kpse.find_file('luaImport.sty')
+    local packagePath = string.match(sourcefile, '(.*/)')
+    import = require (packagePath..'luaImport')
 }
 \newcommand\newGl[3][gls]{
     \directlua{newGl([[#1]], [[#2]], \unexpanded{[[#3]]})}

@@ -79,6 +79,8 @@ function newGl(kind, name, inputStr)
         end
     else
         inputs = inputStr
+        print('----in gls')
+        print(inputs.kind)
     end
 
     callBuild = {
