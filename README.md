@@ -8,11 +8,9 @@ will work without too much effort on any unix based system).
 ## Requirements
 This package requires the following LuaLaTeX packages:
 
-```
-luacode
-luaHelper
-```
+`luaHelper` - Available [here](https://github.com/humdrumcomet/luahelper), as of writing, must be manually installed
 
+`luacode` - Available in standard tex distributions
 
 ## Installation
 To install this package manually, first make sure that you have a local texmf directory with a
